@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class VideostreamApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VideostreamApplication.class, args);
+	    SpringApplication.run(VideostreamApplication.class, args);
 	}
 }
