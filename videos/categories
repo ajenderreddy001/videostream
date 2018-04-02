@@ -1,3 +1,6 @@
-#Tue Mar 27 16:09:37 IST 2018
-fun=["samp1.mp4","samp2.mp4","samp3.mp4"]
+#Mon Apr 02 16:35:03 IST 2018
+fun,thriller=["samp2.mp4"]
+fun=["samp1.mp4","samp2.mp4","samp3.mp4","samp2.mp4"]
 personal=["conv.mp4"]
+fun,science,cartoon=["samp3.mp4"]
+Entertainment=["conv.mp4","conv.mp4","conv.mp4"]

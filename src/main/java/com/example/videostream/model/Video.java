@@ -9,6 +9,12 @@ public class Video {
     private String url;
     public Video(){}
 
+    public Video(String fileName, List<String> categories, String url) {
+        this.fileName = fileName;
+        this.categories = categories;
+        this.url = url;
+    }
+
     public String getFileName() {
         return fileName;
     }

@@ -1,20 +1,15 @@
 package com.example.videostream.controller;
 
+import com.example.videostream.model.Video;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Controller
 public class VideoController {
@@ -36,6 +31,7 @@ public class VideoController {
             return null;
         String orgFileName=videoFile.getOriginalFilename();
         System.out.println("orginal file name:"+orgFileName);
+        List<String> categoryList = new ArrayList<>(Arrays.asList(category.split(",")));
         try{
             byte[] videobytes=videoFile.getBytes();
             BufferedOutputStream bout=new BufferedOutputStream(new FileOutputStream("videos/"+orgFileName));
@@ -47,18 +43,21 @@ public class VideoController {
         {
             //handle filewrite failure;
         }
-        if(Video.catVideos.containsKey(category))
+        if(VideoRest.catVideos.containsKey(category))
         {
-            List<String> list=Video.catVideos.get(category);
+            List<String> list= VideoRest.catVideos.get(category);
             list.add(orgFileName);
         }
         else
         {
             List<String> list=new ArrayList<>();
             list.add(orgFileName);
-            Video.catVideos.put(category,list);
+            VideoRest.catVideos.put(category,list);
         }
-        Map<String, List<String>> temp = Video.catVideos;
+        Video video=new Video(orgFileName,categoryList,"/streamvideo/"+orgFileName);
+        VideoRest.videoList.add(video);
+        VideoRest.storeAllVideos();
+        Map<String, List<String>> temp = VideoRest.catVideos;
         Properties properties = new Properties();
 
         for (Map.Entry<String, List<String>> entry : temp.entrySet()) {
