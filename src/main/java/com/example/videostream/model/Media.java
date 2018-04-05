@@ -1,15 +1,21 @@
 package com.example.videostream.model;
 
+import com.example.videostream.serilizer.CategorySetSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import java.security.Timestamp;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import java.util.Set;
 
 @Entity
-public class Media implements Comparable<Media> {
+public class Media extends Audit implements Comparable<Media> {
     private static final String MEDIA_DIRECTORY="videos";
 
     @Id
     @Column(name = "media_id")
+    @GeneratedValue()
     private int mediaId;
 
     @Column(nullable = false)
@@ -21,10 +27,12 @@ public class Media implements Comparable<Media> {
     @Column(nullable = false)
     private String mediaType;
 
-    @Column(nullable = false)
-    private Timestamp uploadedTimeStamp;
 
-    @ManyToMany(mappedBy = "categoryMedia")
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="category_and_media",joinColumns=@JoinColumn(name = "media_id"),
+            inverseJoinColumns = @JoinColumn(name="category_id"))
+    @JsonSerialize(using = CategorySetSerializer.class)
     private Set<Category> mediaCategory;
 
     public Media(){
@@ -65,14 +73,6 @@ public class Media implements Comparable<Media> {
 
     public void setMediaType(String mediaType) {
         this.mediaType = mediaType;
-    }
-
-    public Timestamp getUploadedTimeStamp() {
-        return uploadedTimeStamp;
-    }
-
-    public void setUploadedTimeStamp(Timestamp uploadedTimeStamp) {
-        this.uploadedTimeStamp = uploadedTimeStamp;
     }
 
     public Set<Category> getMediaCategory() {

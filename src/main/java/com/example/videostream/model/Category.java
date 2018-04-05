@@ -1,21 +1,24 @@
 package com.example.videostream.model;
 
+import com.example.videostream.serilizer.MediaSetSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class Category implements Comparable<Category>{
+public class Category extends Audit implements Comparable<Category>{
     @Id
+    @GeneratedValue
     @Column(name = "category_id")
     private int categoryId;
 
     @Column(nullable = false)
     private String categoryName;
 
-    @ManyToMany()
-    @Column(name = "category_media")
-    @JoinTable(name="category_and_media",joinColumns=@JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name="media_id"))
+    //@JsonIgnoreProperties({"mediaId","mediaPath","createdDate","lastModifiedDate"})
+    @ManyToMany(mappedBy = "mediaCategory")
+    @JsonSerialize(using = MediaSetSerializer.class)
     private Set<Media> categoryMedia;
 
     public Category(){
@@ -48,11 +51,11 @@ public class Category implements Comparable<Category>{
 
     @Override
     public String toString() {
-        return "id:"+categoryId+" name:"+categoryName;
+        return "categoryId:"+ categoryId +" name:"+categoryName;
     }
 
     @Override
     public int compareTo(Category o) {
-        return  this.categoryId-o.categoryId;
+        return  this.categoryId -o.categoryId;
     }
 }
